@@ -25,7 +25,10 @@ while True:
     if feedback == 'exit':
         break
 
-    # TODO: Guess validation
-    # TODO: Exit if all green
+    if feedback == 'GGGGG':
+        print('Win!')
+
+    if len(feedback) != 5 and any(ch not in "BYG" for ch in feedback):
+        continue
 
     game_state.add_guess(guess, list(feedback))

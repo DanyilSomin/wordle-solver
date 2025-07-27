@@ -56,7 +56,7 @@ def get_best_word_accordind_to_the_state(state: WordleGameState,
                     return False
  
         for letter in absent_letters:
-            if letter in word:
+            if letter in [letter if green[i] == None else None for i, letter in enumerate(word)]:
                 return False
 
         return True

@@ -35,17 +35,11 @@ class WordleGameState:
         return yellow_positions
     
     def get_absent_letters(self):
-        present_letters = set()
         absent_letters = set()
  
         for guess, fb in self.rows:
             for i, code in enumerate(fb):
-                if code in ('G', 'Y'):
-                    present_letters.add(guess[i])
- 
-        for guess, fb in self.rows:
-            for i, code in enumerate(fb):
-                if code == 'B' and guess[i] not in present_letters:
+                if code == 'B':
                     absent_letters.add(guess[i])
 
         return absent_letters
