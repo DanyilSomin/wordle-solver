@@ -18,22 +18,29 @@ class WordleGameState:
             line = ''.join(f"{color_codes[c]}{l}{reset}" for l, c in zip(guess, fb))
             print(line)
 
+    
     def get_green_letters(self):
         green_slots = [None] * 5
+    
         for guess, fb in self.rows:
             for i, code in enumerate(fb):
                 if code == 'G':
                     green_slots[i] = guess[i]
+    
         return green_slots
     
+
     def get_yellow_positions(self):
         yellow_positions = [set() for _ in range(5)]
+
         for guess, fb in self.rows:
             for i, code in enumerate(fb):
                 if code == 'Y':
                     yellow_positions[i].add(guess[i])
+        
         return yellow_positions
     
+
     def get_absent_letters(self):
         absent_letters = set()
  
