@@ -12,6 +12,7 @@ def load_words(filepath: str) -> pandas.DataFrame:
 
     return answers_df
 
+
 def get_letter_counts_per_column(df: pandas.DataFrame) -> pandas.DataFrame:
     letter_counts_df = pandas.DataFrame({
         col: df[col].value_counts()
@@ -19,6 +20,7 @@ def get_letter_counts_per_column(df: pandas.DataFrame) -> pandas.DataFrame:
     }).fillna(0).astype(int)
 
     return letter_counts_df
+
 
 def get_word_score_df(words_df: pandas.DataFrame) -> pandas.DataFrame:
     letter_counts_df = get_letter_counts_per_column(words_df)
@@ -34,33 +36,55 @@ def get_word_score_df(words_df: pandas.DataFrame) -> pandas.DataFrame:
     return word_score_df
 
 
-def get_best_word_accordind_to_the_state(state: WordleGameState,
-                                         word_score_df: pandas.DataFrame
-                                         ) -> Optional[str]:
+def is_valid_discower_guess(word: str, state: WordleGameState):
     green = state.get_green_letters()
     yellow_positions = state.get_yellow_positions()
     absent_letters = state.get_absent_letters()
 
-    def is_valid(word):
-        word = word.upper()
- 
-        for i, g in enumerate(green):
-            if g is not None and word[i] != g:
+    word = word.lower()
+
+    for i, g in enumerate(green):
+        if g is not None and word[i] != g:
+            return False
+
+    for i, letters in enumerate(yellow_positions):
+        for y in letters:
+            if word[i] == y:
                 return False
- 
-        for i, letters in enumerate(yellow_positions):
-            for y in letters:
-                if word[i] == y:
-                    return False
-                if y not in word:
-                    return False
- 
-        for letter in absent_letters:
-            if letter in [letter if green[i] == None else None for i, letter in enumerate(word)]:
+            if y not in word:
                 return False
 
-        return True
+    for letter in absent_letters:
+        if letter in [letter if green[i] == None else None for i, letter in enumerate(word)]:
+            return False
 
+    return True
+
+
+def is_valid_answer_guess(word: str, guess: WordleGameState):
+    word = word.lower()
+
+    for i, g in enumerate(green):
+        if g is not None and word[i] != g:
+            return False
+
+    for i, letters in enumerate(yellow_positions):
+        for y in letters:
+            if word[i] == y:
+                return False
+            if y not in word:
+                return False
+
+    for letter in absent_letters:
+        if letter in [letter if green[i] == None else None for i, letter in enumerate(word)]:
+            return False
+
+    return True
+
+
+def get_best_word_according_to_the_state(state: WordleGameState,
+                                         word_score_df: pandas.DataFrame
+                                         ) -> Optional[str]:
     filtered = word_score_df[word_score_df['word'].apply(is_valid)]
 
     if filtered.empty:

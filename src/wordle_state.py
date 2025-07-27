@@ -4,7 +4,7 @@ class WordleGameState:
 
     def add_guess(self, guess: str, feedback: list):
         """feedback: list of 'G', 'Y', 'B' for green/yellow/black"""
-        self.rows.append((guess.upper(), feedback))
+        self.rows.append((guess.lower(), feedback))
 
     def display(self):
         color_codes = {

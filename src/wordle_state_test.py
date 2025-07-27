@@ -5,7 +5,7 @@ class WordleGameState:
         self.rows = []
 
     def add_guess(self, guess: str, feedback: list):
-        self.rows.append((guess.upper(), feedback))
+        self.rows.append((guess.lower(), feedback))
 
     def display(self):
         color_codes = {'G': '\033[92m', 'Y': '\033[93m', 'B': '\033[90m'}
