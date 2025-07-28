@@ -1,5 +1,6 @@
+from conservativechoseoptimisticordiscoveryguessstrategy import ConservativeChoseOptmisticOrDiscoveryStrategy
 from wordle_state import WordleGameState
-from functions import load_words, get_word_score_df, get_best_word_accordind_to_the_state
+from functions import load_words, get_word_score_df, get_best_word_according_to_the_state
 
 answers_df = load_words('res/wordle-answers.txt')
 
@@ -13,7 +14,7 @@ word_score_df = get_word_score_df(answers_df)
 game_state = WordleGameState()
 
 while True:
-    guess = get_best_word_accordind_to_the_state(game_state, word_score_df)
+    guess = get_best_word_according_to_the_state(game_state, word_score_df, ConservativeChoseOptmisticOrDiscoveryStrategy())
 
     if not guess:
         print('Error: program failed to produce a guess word.')
