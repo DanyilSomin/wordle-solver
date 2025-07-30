@@ -3,19 +3,17 @@ from wordle_state import WordleGameState
 from functions import load_words, get_word_score_df, get_best_word_according_to_the_state
 
 answers_df = load_words('res/wordle-answers.txt')
+guesses_df = load_words('res/wordle-guesses.txt')
 
-# print(answers_df.head())
+guesses_score_df, answers_score_df = get_word_score_df(guesses_df, answers_df)
 
-word_score_df = get_word_score_df(answers_df)
-
-# word_score_df = word_score_df.sort_values(by='score', ascending=False).reset_index(drop=True)
-# print(word_score_df.head(10))
-
-game_state = WordleGameState()
+state = WordleGameState()
 
 while True:
-    guess = get_best_word_according_to_the_state(game_state, word_score_df, ConservativeChoseOptmisticOrDiscoveryStrategy())
-
+    guess = get_best_word_according_to_the_state(state,
+                                                guesses_score_df,
+                                                answers_score_df,
+                                                ConservativeChoseOptmisticOrDiscoveryStrategy())
     if not guess:
         print('Error: program failed to produce a guess word.')
         break
@@ -29,7 +27,7 @@ while True:
     if feedback == 'GGGGG':
         print('Win!')
 
-    if len(feedback) != 5 and any(ch not in "BYG" for ch in feedback):
+    if len(feedback) != 5 or any(ch not in "BYG" for ch in feedback):
         continue
 
-    game_state.add_guess(guess, list(feedback))
+    state.add_guess(guess, list(feedback))

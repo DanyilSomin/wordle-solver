@@ -1,3 +1,6 @@
+import string
+from collections import defaultdict
+
 class WordleGameState:
     def __init__(self):
         self.rows = []
@@ -50,3 +53,32 @@ class WordleGameState:
                     absent_letters.add(guess[i])
 
         return absent_letters
+    
+    def green_map(self):
+        green_map = defaultdict(int)
+        for letter in self.get_green_letters():
+            if letter != None:
+                green_map[letter] += 1
+        
+        return green_map
+
+    def yellow_map(self):
+        green_map = self.green_map()
+        yellow_map = defaultdict(int)
+
+        for alphabet_letter in string.ascii_lowercase:
+            for guess, feedback in self.rows:
+                yellow_letter_count_in_a_guess = 0
+                
+                if guess == 'melle':
+                    retwertwert=0
+
+                for i, guess_letter in enumerate(guess):
+                    if guess_letter == alphabet_letter and (feedback[i] == 'Y' or feedback[i] == 'G'):
+                        yellow_letter_count_in_a_guess += 1
+                
+                yellow_map[alphabet_letter] = max(yellow_map[alphabet_letter], 
+                                                  yellow_letter_count_in_a_guess
+                                                  - green_map[alphabet_letter])
+        
+        return yellow_map
